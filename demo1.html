@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>滚动插件</title>
+</head>
+<style>
+	* {
+		padding: 0;
+		margin: 0;
+	}
+	ul, li {
+		list-style: none;
+	}
+	body {
+		overflow: hidden;
+	}
+	.main {
+		position: relative;
+		width: 80%;
+		height: 100vh;
+		overflow: hidden;
+		margin: 0 auto;
+	}
+	.main .content {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+	}
+	.main .content > div {
+		width: 100%;
+		height: 100vh;
+		overflow: hidden;
+		color: #fff;
+		font-size: 40px;
+		font-weight: bold;
+		line-height: 100vh;
+		text-align: center;
+	}
+	.box1 {
+		background: #a00;
+	}
+	.box2 {
+		background: #0a0;
+	}
+	.box3 {
+		background: #00a;
+	}
+	.box4 {
+		background: #aa0;
+	}
+	.box5 {
+		background: #a0a;
+	}
+	.box6 {
+		background: #0aa;
+	}
+	.box7 {
+		background: #a4a;
+	}
+
+	.main .stairs {
+		position: absolute;
+		right: 16px;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+	.main .stairs li {
+		width: 6px;
+		height: 6px;
+		background: rgba(255,255,255,0.5);
+		border-radius: 50%;
+		margin-bottom: 10px;
+		cursor: pointer;
+	}
+	.main .stairs li:last-child {
+		margin-bottom: 0;
+	}
+	.main .stairs li:hover, .main .stairs li.active {
+		transform: scale(2.5, 2.5);
+	}
+</style>
+<body>
+	
+	<div class="mousewheel main">
+		<div class="content">
+			<div class="box1">1</div>
+			<div class="box2">2</div>
+			<div class="box3">3</div>
+			<div class="box4">4</div>
+			<div class="box5">5</div>
+			<div class="box6">6</div>
+			<div class="box7">7</div>
+		</div>
+		<div class="stairs">
+			<ul>
+				<li class="active"></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+	</div>
+
+	<script src="lib/jquery.js"></script>
+	<script src="lib/jquery.mousewheel.js"></script>
+	<script>
+		$(function() {
+			
+			/**
+			* 获取所有滚动盒子的滚动高度
+			*/
+			var aSH = [],
+				aBox = $(".mousewheel .content > div");
+			function getSH() {
+				aSH = aBox.map(function(index, item) {
+					return $(item).offset().top;
+				})
+			}
+			$(window).load(getSH);
+			$(window).resize(getSH);
+
+
+			/**
+			* 通过滚动设置滚动高度
+			*/
+			var isScroll = 1,
+				iBox = 0,
+				oMouse = $(".mousewheel .content"),
+				oStairs = $(".mousewheel .stairs li");
+			$(window).mousewheel(function(e, delta, deltaX, deltaY) {
+				if(isScroll) {
+					isScroll = 0;
+					if(deltaY < 0 && iBox < aSH.length-1) {
+						iBox++;
+					} else if(deltaY > 0 && iBox > 0) {
+						iBox--;
+					}
+					oMouse.animate({
+						top: -aSH[iBox]
+					}, 600, function() {
+						isScroll = 1;
+						oStairs.removeClass("active");
+						$(oStairs[iBox]).addClass("active");
+					})
+				}
+				return false;
+			})
+
+			/**
+			* 点击楼梯滚动
+			*/
+			function stairsFn() {
+				var idx = $(this).index();
+				if(idx != iBox && isScroll) {
+					isScroll = 0;
+					iBox = idx;
+					oMouse.animate({
+						top: -aSH[iBox]
+					}, 600, function() {
+						isScroll = 1;
+						oStairs.removeClass("active");
+						$(oStairs[iBox]).addClass("active");
+					})
+				}
+			}
+			oStairs.click(stairsFn);
+		})
+	</script>
+</body>
+</html>
