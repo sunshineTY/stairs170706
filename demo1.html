@@ -16,19 +16,22 @@
 		overflow: hidden;
 	}
 	.main {
-		position: relative;
 		width: 80%;
 		height: 100vh;
-		overflow: hidden;
 		margin: 0 auto;
 	}
-	.main .content {
+	
+	.mousewheel {
+		position: relative;
+		overflow: hidden;
+	}
+	.mousewheel .content {
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 	}
-	.main .content > div {
+	.mousewheel .content > div {
 		width: 100%;
 		height: 100vh;
 		overflow: hidden;
@@ -60,13 +63,13 @@
 		background: #a4a;
 	}
 
-	.main .stairs {
+	.mousewheel .stairs {
 		position: absolute;
 		right: 16px;
 		top: 50%;
 		transform: translateY(-50%);
 	}
-	.main .stairs li {
+	.mousewheel .stairs li {
 		width: 6px;
 		height: 6px;
 		background: rgba(255,255,255,0.5);
@@ -74,10 +77,10 @@
 		margin-bottom: 10px;
 		cursor: pointer;
 	}
-	.main .stairs li:last-child {
+	.mousewheel .stairs li:last-child {
 		margin-bottom: 0;
 	}
-	.main .stairs li:hover, .main .stairs li.active {
+	.mousewheel .stairs li:hover, .mousewheel .stairs li.active {
 		transform: scale(2.5, 2.5);
 	}
 </style>
